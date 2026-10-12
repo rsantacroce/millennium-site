@@ -32,6 +32,7 @@
           <li><a href="#cars">Cars, the radio and races</a></li>
           <li><a href="#houses">Houses</a></li>
           <li><a href="#night">Day and night</a></li>
+          <li><a href="#y2k">New Year's Eve: Y2K</a></li>
           <li><a href="#chat">Chat and friends</a></li>
           <li><a href="#settings">Settings</a></li>
           <li><a href="#hosting">Hosting and servers</a></li>
@@ -287,6 +288,24 @@ cargo run --release -p client</pre>
   come on, the music changes, Vinnie's hot dog cart opens downtown, and graffiti taggers come out.
   The time is on the HUD.</p>
 
+<h2 id="y2k">16b. New Year's Eve: Y2K</h2>
+<p>Every so often (when the server's admins start it), the city counts down to the year 2000. A
+  banner at the top of the screen shows the countdown and the party music starts: head to Maple
+  &amp; 5th for the fireworks.</p>
+<p>At midnight the <strong>millennium bug</strong> hits. Streetlights flicker, the clocks say 1900,
+  and the whole city pitches in to fix it before time runs out:</p>
+<ul>
+  <li><strong>Glitched terminals:</strong> reboot them with a Screwdriver Set (+5, Electronics XP).</li>
+  <li><strong>Metro generators:</strong> get them running with a Wrench (+8, Mechanics XP).</li>
+  <li><strong>Stranded commuters</strong> by the Metro: bring them hot cocoa (+3, Cooking XP). Cocoa
+    mix is sold at the Corner Store and Value Grocer; heat it with a frying pan.</li>
+  <li><strong>Y2K Bugs:</strong> glowing beetles everywhere. Stomp them (+1 each).</li>
+</ul>
+<p>The banner shows the city's progress. Make it in time and there's a party, with more
+  fireworks. Everyone who helped gets an <strong>"I Survived Y2K" T-shirt</strong> (+10 health), a
+  <strong>Y2K floppy disk</strong> to frame at home, and City Services' thanks. Miss it and helpers
+  still keep the floppy.</p>
+
 <h2 id="chat">17. Chat, trading and friends</h2>
 <p>Press <kbd>Enter</kbd> to chat. Plain text goes to the current tab's channel. Commands:</p>
 <div class="table-wrap"><table>
@@ -337,7 +356,9 @@ cargo run --release -p server</pre>
   <code>/admin</code> for a window listing everyone online (kick, mute, ban) and the player reports.
   <code>/mod ban NAME 48 reason</code>, <code>/mod unban</code>, <code>/mod reports</code>,
   <code>/mod resolve ID</code> and <code>/mod resetcode NAME</code> (a new recovery code) work from chat.
-  With <code>[metrics] bind</code> set, the server serves a status page and Prometheus metrics.</p>
+  With <code>[metrics] bind</code> set, the server serves a status page and Prometheus metrics.
+  <code>/mod event y2k [minutes] [goal]</code> starts the New Year's Eve event (or schedule it with
+  <code>[world] y2k_event_at</code>); <code>/mod event stop</code> calls it off.</p>
 <p>For a server that stays up, there's a Docker image (<code>docker build -t millennium-server .</code>,
   SQLite in a volume or Postgres via <code>DATABASE_URL</code>) and a systemd unit. Either way, set a
   signing key: <code>millennium-server --generate-key</code>. SQLite worlds back themselves up every hour;
