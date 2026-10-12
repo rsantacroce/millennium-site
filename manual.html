@@ -319,6 +319,11 @@ cargo run --release -p server</pre>
   <code>config/server.toml</code>. The same file sets the ports, the length of a day, the chat
   rules and the admins. Large worlds can run each zone on its own server process, linked by a
   hub; see the <a href="https://github.com/rsantacroce/millennium#running-the-world-on-several-servers">README</a>.</p>
+<p>For a server that stays up, there's a Docker image (<code>docker build -t millennium-server .</code>,
+  SQLite in a volume or Postgres via <code>DATABASE_URL</code>) and a systemd unit. Either way, set a
+  signing key: <code>millennium-server --generate-key</code>. SQLite worlds back themselves up every hour;
+  Postgres has backup and restore scripts. The full guide:
+  <a href="https://github.com/rsantacroce/millennium/blob/main/docs/deploy.md">Running a Millennium server</a>.</p>
 
 <h2 id="trouble">20. Troubleshooting</h2>
 <ul>
