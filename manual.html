@@ -68,6 +68,19 @@ cargo run --release -p client</pre>
   does). If that server is ever reinstalled you'll get a warning; see <a href="#trouble">Troubleshooting</a>.</p>
 <p>Passwords are hashed with argon2id and travel over TLS: the server never sees or stores them in
   plain text.</p>
+<h3>Your recovery code</h3>
+<p>When you create an account, the game shows you a <strong>recovery code</strong> like
+  <code>K7QM-2XVD-PR9T</code>, once. Write it down: accounts have no email address, so it's the only
+  way to reset a forgotten password. Lost it? A server admin can give you a new one.</p>
+<p>Under the sign-on buttons:</p>
+<ul>
+  <li><strong>Forgot password?</strong>: your name, your recovery code and a new password. You get a
+    fresh code back (each one works once).</li>
+  <li><strong>Change password</strong>: needs the current one.</li>
+  <li><strong>Delete account</strong>: deletes the account and all its characters, for good (type
+    DELETE to confirm). Anyone bidding on your auctions gets their money back, and a crew you led
+    passes to its longest-standing member.</li>
+</ul>
 
 <h2 id="controls">3. Controls</h2>
 <p>These are the defaults. Every key can be rebound in the settings (<kbd>F10</kbd>).</p>
@@ -289,6 +302,7 @@ cargo run --release -p client</pre>
 <tr><td><code>/friend add name</code>, <code>/friend remove name</code></td><td>Your friends list (you get a notice when they come online).</td></tr>
 <tr><td><code>/crew create Name TAG</code>, <code>/crew invite</code>, <code>/crew kick</code>, <code>/crew leave</code>, <code>/crew disband</code></td><td>Crews: guilds with a tag on your name.</td></tr>
 <tr><td><code>/ignore name</code>, <code>/unignore name</code>, <code>/ignorelist</code></td><td>Stop seeing someone's messages.</td></tr>
+<tr><td><code>/report name what happened</code></td><td>Tell the admins about someone (they see what that player said lately).</td></tr>
 <tr><td><code>/help</code>, <code>/clear</code></td><td>Help / clear the chat window.</td></tr>
 </tbody></table></div>
 <p><strong>Trades:</strong> both players see both offers. Add items with <strong>Offer</strong> in your
@@ -319,6 +333,11 @@ cargo run --release -p server</pre>
   <code>config/server.toml</code>. The same file sets the ports, the length of a day, the chat
   rules and the admins. Large worlds can run each zone on its own server process, linked by a
   hub; see the <a href="https://github.com/rsantacroce/millennium#running-the-world-on-several-servers">README</a>.</p>
+<p><strong>Running the world:</strong> put your account in <code>[chat] admins</code> and type
+  <code>/admin</code> for a window listing everyone online (kick, mute, ban) and the player reports.
+  <code>/mod ban NAME 48 reason</code>, <code>/mod unban</code>, <code>/mod reports</code>,
+  <code>/mod resolve ID</code> and <code>/mod resetcode NAME</code> (a new recovery code) work from chat.
+  With <code>[metrics] bind</code> set, the server serves a status page and Prometheus metrics.</p>
 <p>For a server that stays up, there's a Docker image (<code>docker build -t millennium-server .</code>,
   SQLite in a volume or Postgres via <code>DATABASE_URL</code>) and a systemd unit. Either way, set a
   signing key: <code>millennium-server --generate-key</code>. SQLite worlds back themselves up every hour;
@@ -330,6 +349,9 @@ cargo run --release -p server</pre>
   <li><strong>"The server's identity has changed":</strong> the server was reinstalled. If you trust
     it, remove its line from <code>saves/known_servers.txt</code>.</li>
   <li><strong>"There's no account named ...":</strong> click <strong>New Account</strong> first.</li>
+  <li><strong>Forgot your password?</strong> Use <strong>Forgot password?</strong> with your recovery code,
+    or ask an admin for a new code.</li>
+  <li><strong>"This account is banned":</strong> an admin banned it; the message says until when and why.</li>
   <li><strong>"Logged in, but the game server didn't answer":</strong> the login (TCP) got through but
     the game (UDP) didn't. Check the firewall or port forwarding for UDP 5888.</li>
   <li><strong>"Could not listen on port 5888":</strong> another server or hosted game is already running.</li>
