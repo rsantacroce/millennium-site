@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Millennium Asset List</title>
+<meta name="description" content="Every zone, character, item, quest, shop, recipe, rival, hack, faction, car, race, sound and music track in Millennium.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%230a246a'/%3E%3Ctext x='8' y='12.5' font-family='Tahoma,Verdana,sans-serif' font-size='12' font-weight='bold' fill='white' text-anchor='middle'%3EM%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main class="desktop">
+  <div class="window">
+    <div class="titlebar"><h1>Asset List - Millennium</h1><div class="controls" aria-hidden="true"><span>_</span><span>□</span><span>x</span></div></div>
+    <div class="body">
+      <div class="panel">
+        <p><strong>Everything in the game, in one place.</strong> Millennium ships no art, sound or
+          music files: the world is built from its layouts, characters and cars are assembled from
+          simple shapes, and every sound is synthesized when the game starts. The tables below are
+          generated from the game's own data (<code>cargo run -p shared --example catalog</code>), so
+          they always match the game.</p>
+        <ol class="toc">
+          <li><a href="#zones">Zones</a></li>
+          <li><a href="#characters">Characters</a></li>
+          <li><a href="#objects">Interactive objects</a></li>
+          <li><a href="#items">Items</a></li>
+          <li><a href="#quests">Quests</a></li>
+          <li><a href="#shops">Shops</a></li>
+          <li><a href="#recipes">Repairs and cooking</a></li>
+          <li><a href="#rivals">Rivals</a></li>
+          <li><a href="#hacks">Hacks</a></li>
+          <li><a href="#factions">Factions</a></li>
+          <li><a href="#cars">Cars</a></li>
+          <li><a href="#races">Street races</a></li>
+          <li><a href="#music">Music</a></li>
+          <li><a href="#sounds">Sound effects</a></li>
+          <li><a href="#visuals">Models and scenery</a></li>
+        </ol>
+        <div class="filter">
+          <label for="filter"><strong>Find:</strong></label>
+          <input id="filter" type="search" placeholder="e.g. walkman, Pinecrest, Hacking" autocomplete="off">
+          <span id="filter-count" class="muted" aria-live="polite"></span>
+        </div>
+      </div>
+
+      <div id="catalog" class="panel">
+<!-- CATALOG -->
+
+<section id="music">
+<h2>Music <span class="count">(8)</span></h2>
+<p>Seamless 8- or 16-bar loops, synthesized at startup by a small sequencer: drum patterns as
+  strings, chords as MIDI notes, electric piano, pads, vibes, Karplus-Strong guitar, saw stabs,
+  pipe clanks and a drone. Tracks cross-fade as you move around.</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Track</th><th>Style</th><th>Where it plays</th></tr></thead>
+<tbody>
+<tr><td><strong>Downtown</strong></td><td>Boom-bap: swung drums, Rhodes chords, vinyl crackle (90 bpm)</td><td>Downtown and the rooftops by day</td></tr>
+<tr><td><strong>Night</strong></td><td>Trip-hop: heavy slow beat, dark pad, sub bass (72 bpm)</td><td>Every outdoor zone after dark, and at home</td></tr>
+<tr><td><strong>Mall</strong></td><td>Bossa-nova muzak: rim clicks, walking bass, vibes (124 bpm)</td><td>The Galleria Mall, all day; Smooth 98.7 on the car radio</td></tr>
+<tr><td><strong>Industrial</strong></td><td>A growling drone, pipe clanks and steam (100 bpm)</td><td>Harbor Docks and the Abandoned Factory</td></tr>
+<tr><td><strong>Suburbs</strong></td><td>Sunny strummed guitar pop on I-V-vi-IV (112 bpm)</td><td>Maple Heights by day</td></tr>
+<tr><td><strong>Country</strong></td><td>Finger-picked folk, brushed snare (96 bpm)</td><td>Route 9, Pinecrest and Hollow Pines by day</td></tr>
+<tr><td><strong>Z-100 Hits</strong></td><td>Eurodance: four-on-the-floor, off-beat bass, saw stabs, a square arp (136 bpm)</td><td>Car radio</td></tr>
+<tr><td><strong>Radio Free Maple</strong></td><td>Jungle off a pirate transmitter: chopped breakbeat, rolling sub bass, static (164 bpm)</td><td>Near the antenna on the rooftops, and on the car radio</td></tr>
+</tbody></table></div>
+</section>
+
+<section id="sounds">
+<h2>Sound effects <span class="count">(11)</span></h2>
+<p>Each one is a few tones, sweeps and bursts of noise, rendered to a WAV in memory at startup.</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Sound</th><th>When</th><th>What it is</th></tr></thead>
+<tbody>
+<tr><td><strong>Dial-up</strong></td><td>Signing on</td><td>DTMF dial tones, the answer tone, the squeal and the static of a 56k handshake</td></tr>
+<tr><td><strong>Click</strong></td><td>Every button</td><td>A short square-wave tick (it's 1999; everything clicks)</td></tr>
+<tr><td><strong>Chat</strong></td><td>A chat message</td><td>Two pager beeps</td></tr>
+<tr><td><strong>Whisper</strong></td><td>A private message</td><td>Three quick high beeps</td></tr>
+<tr><td><strong>Hit</strong></td><td>You land a hit</td><td>A noise burst over a falling thump</td></tr>
+<tr><td><strong>Hurt</strong></td><td>You take a hit</td><td>A falling tone and a short crunch</td></tr>
+<tr><td><strong>Coin</strong></td><td>Money in</td><td>The classic two-note coin</td></tr>
+<tr><td><strong>Level up</strong></td><td>A skill levels up</td><td>A rising five-note arpeggio</td></tr>
+<tr><td><strong>Quest</strong></td><td>A quest starts, advances or completes</td><td>A three-note fanfare</td></tr>
+<tr><td><strong>Subway</strong></td><td>Changing zones</td><td>A rushing train and its rumble</td></tr>
+<tr><td><strong>Knocked out</strong></td><td>You get knocked out</td><td>A sad three-step descent</td></tr>
+</tbody></table></div>
+</section>
+
+<section id="visuals">
+<h2>Models and scenery</h2>
+<p>All drawn from code at runtime, from the same layout data the server uses for collision.</p>
+<div class="table-wrap"><table>
+<thead><tr><th>What</th><th>How it's made</th></tr></thead>
+<tbody>
+<tr><td><strong>Buildings</strong></td><td>Boxes with a band of windows per floor (lit at night), a parapet, a rooftop AC unit, and a door with an awning facing the nearest street. They fade when they'd hide you.</td></tr>
+<tr><td><strong>Characters</strong></td><td>Blocky bodies in three builds and several skin tones, with jackets, pants, caps and shades in a 1999 palette. Arms and legs swing as they walk; they bob a little when idle.</td></tr>
+<tr><td><strong>Cars</strong></td><td>The Rusty Hatchback and the '89 Turbo Coupe: a body, a cabin with windows, and wheels with hubcaps that spin. The body leans into turns.</td></tr>
+<tr><td><strong>Props</strong></td><td>Phone booths, a newsstand, a dumpster, benches, mailboxes, billboards, a basketball hoop, a shipping container, crane legs, oil drums, a scrap heap, a rusted car, gas pumps, the mall's fountain and escalator, a water tower, a pigeon coop, the pirate antenna, pine and oak trees, a lake; plus the hackable ATMs, arcade cabinets, security panels and terminals.</td></tr>
+<tr><td><strong>Furniture</strong></td><td>Eight looks: stove, workbench, desk, bed, footlocker, TV, lamp and poster.</td></tr>
+<tr><td><strong>Streets</strong></td><td>Asphalt with dashed centre lines, and lamp posts every 14 m on alternating sides that light up at night.</td></tr>
+<tr><td><strong>Sky and light</strong></td><td>A sun that moves with the 40-minute day, a sky that darkens at dusk, and warm streetlamps and windows at night.</td></tr>
+<tr><td><strong>Interface</strong></td><td>Windows 2000-style windows: grey bevels, navy gradient title bars, an instant-messenger chat window, classic yellow tooltips.</td></tr>
+</tbody></table></div>
+</section>
+      </div>
+    </div>
+  </div>
+  <footer><a href="index.html">Home</a> · <a href="manual.html">Manual</a> · <a href="https://github.com/rsantacroce/millennium">Source</a></footer>
+</main>
+<nav class="taskbar" aria-label="Site">
+  <a class="start" href="index.html">⊞ Millennium</a>
+  <a href="manual.html">Manual</a>
+  <a href="assets.html" aria-current="page">Assets</a>
+  <a href="https://github.com/rsantacroce/millennium">Source</a>
+  <span class="clock" id="clock">12:00 AM</span>
+</nav>
+<script src="site.js"></script>
+</body>
+</html>

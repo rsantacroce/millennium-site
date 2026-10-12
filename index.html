@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Millennium: an online RPG set in 1999-2003</title>
+<meta name="description" content="Millennium is an online RPG set around the year 2000: pagers, dial-up, burned CDs and a whole city to make your own. Written in Rust with Bevy.">
+<meta property="og:title" content="Millennium">
+<meta property="og:description" content="An online RPG set around the year 2000, written in Rust with Bevy.">
+<meta property="og:image" content="images/downtown.jpg">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%230a246a'/%3E%3Ctext x='8' y='12.5' font-family='Tahoma,Verdana,sans-serif' font-size='12' font-weight='bold' fill='white' text-anchor='middle'%3EM%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main class="desktop">
+
+  <section class="window" aria-labelledby="hero-title">
+    <div class="titlebar"><h1 id="hero-title">Millennium - Welcome</h1><div class="controls" aria-hidden="true"><span>_</span><span>□</span><span>x</span></div></div>
+    <div class="body hero">
+      <div>
+        <p class="logo" style="font-size:44px;margin:0">Millennium</p>
+        <p class="tagline"><strong>An online RPG set around the year 2000.</strong></p>
+        <p>Pagers, dial-up modems, internet cafés and burned CDs. A persistent city where you fix
+          broken gadgets for cash, run errands for the locals, fight rival crews at the docks, hack
+          payphones, drive a junker you rebuilt yourself and buy a house in the suburbs, with your
+          friends online beside you.</p>
+        <p class="muted">Written in Rust with Bevy. Every sound and every note of music is synthesized
+          in code. Free and open source.</p>
+        <div class="buttons">
+          <a class="button primary" href="manual.html">Read the manual</a>
+          <a class="button" href="assets.html">Browse the assets</a>
+          <a class="button" href="https://github.com/rsantacroce/millennium">Source code</a>
+        </div>
+        <ul class="stats" aria-label="The game in numbers">
+          <li><strong>9</strong> zones</li>
+          <li><strong>25</strong> characters</li>
+          <li><strong>23</strong> quests</li>
+          <li><strong>71</strong> items</li>
+          <li><strong>7</strong> skills</li>
+          <li><strong>4</strong> factions</li>
+          <li><strong>8</strong> music tracks</li>
+        </ul>
+      </div>
+      <a href="images/downtown.jpg"><img class="shot" src="images/downtown.jpg" width="1600" height="900" alt="Downtown Maple and 5th at mid-morning: the Byte Cafe, Officer Pruitt with a quest marker, a red payphone, the messenger window and the minimap"></a>
+    </div>
+  </section>
+
+  <section class="window" aria-labelledby="features-title">
+    <div class="titlebar"><h2 id="features-title">What's in the city</h2></div>
+    <div class="body">
+      <div class="grid">
+        <article class="card"><h3><span class="icon" aria-hidden="true">▦</span>A city and a region</h3>
+          <p>Downtown Maple &amp; 5th, the Harbor Docks, the Galleria Mall, an abandoned factory, the
+            suburbs of Maple Heights and the rooftops. Take the highway to Route 9, the town of
+            Pinecrest and Hollow Pines State Park.</p></article>
+        <article class="card"><h3><span class="icon" aria-hidden="true">★</span>Seven skills</h3>
+          <p>Electronics, Mechanics, Cooking, Fitness, Driving, Hacking and Trading. Level up by
+            doing: repair a walkman, rebuild a carburetor, flip a burger, win a fight.</p></article>
+        <article class="card"><h3><span class="icon" aria-hidden="true">!</span>Quests and a tutorial</h3>
+          <p>Officer Pruitt shows you the ropes, then 23 quests: <em>56k Dreams</em>, <em>Rat
+            Problem</em>, <em>Black ICE</em>, a road trip to Pinecrest and more, with a quest tracker
+            and tips.</p></article>
+        <article class="card"><h3><span class="icon" aria-hidden="true">$</span>A real economy</h3>
+          <p>Shops that buy only what they deal in, limited stock, prices that drop when everyone
+            sells the same thing, and the <strong>e-Bid</strong> auction house with escrow and
+            claims.</p></article>
+        <article class="card"><h3><span class="icon" aria-hidden="true">⚑</span>Factions</h3>
+          <p>City Services, Meridian Corp, the Dockside Crew and the Zer0 Day hackers. Your
+            reputation opens discounts and locked gear.</p></article>
+        <article class="card"><h3><span class="icon" aria-hidden="true">⌨</span>Hacking</h3>
+          <p>Payphones, ATMs and office terminals. Memorize the access code before it disappears;
+            the better you are, the shorter the code.</p></article>
+        <article class="card"><h3><span class="icon" aria-hidden="true">◧</span>Cars and races</h3>
+          <p>Fix up Old Earl's junker and it's yours. Drive the highway, race Dash through Maple
+            &amp; 5th, and tune the car radio to Z-100 Hits or the pirate station.</p></article>
+        <article class="card"><h3><span class="icon" aria-hidden="true">⌂</span>Houses</h3>
+          <p>Buy one of five houses in Maple Heights and furnish it. A stove, a workbench and a
+            computer help your skills at home; a waterbed leaves you Well Rested.</p></article>
+        <article class="card"><h3><span class="icon" aria-hidden="true">☾</span>Day and night</h3>
+          <p>A 40-minute day. Streetlamps and lit windows after dark, a hot dog cart that only opens
+            at night, and graffiti taggers who come out with it.</p></article>
+        <article class="card"><h3><span class="icon" aria-hidden="true">♪</span>Synthesized sound</h3>
+          <p>A dial-up handshake at login, pager beeps for chat, and a music loop for every part of
+            town: boom-bap downtown, bossa muzak at the mall, jungle on the pirate radio.</p></article>
+        <article class="card"><h3><span class="icon" aria-hidden="true">☺</span>Social</h3>
+          <p>An instant-messenger chat with Say, Zone, Global, Whisper, Party and Crew. Trades,
+            parties, a friends list and crews with tags.</p></article>
+        <article class="card"><h3><span class="icon" aria-hidden="true">⇄</span>Host Game</h3>
+          <p>No server to rent: click <strong>Host Game</strong> and your friends join your world.
+            Or run a dedicated server, even split over several machines.</p></article>
+      </div>
+    </div>
+  </section>
+
+  <section class="window" aria-labelledby="shots-title">
+    <div class="titlebar"><h2 id="shots-title">Screenshots</h2></div>
+    <div class="body">
+      <div class="gallery">
+        <figure><a href="images/dialogue.jpg"><img src="images/dialogue.jpg" width="1600" height="900" loading="lazy" alt="Talking to Officer Pruitt"></a><figcaption>Officer Pruitt's first errand: one Fizz Cola, please.</figcaption></figure>
+        <figure><a href="images/map.jpg"><img src="images/map.jpg" width="1600" height="900" loading="lazy" alt="The map window over Downtown, and the quest tracker with a tip"></a><figcaption>The map (M) and the quest tracker, with tips that use your own keys.</figcaption></figure>
+        <figure><a href="images/maple-heights.jpg"><img src="images/maple-heights.jpg" width="1600" height="900" loading="lazy" alt="Maple Heights in the afternoon, by the Metro station"></a><figcaption>Maple Heights: the grocery, the diner, and houses for sale.</figcaption></figure>
+        <figure><a href="images/route-9-radio.jpg"><img src="images/route-9-radio.jpg" width="1600" height="900" loading="lazy" alt="Driving a coupe on Route 9 at night with the radio on Z-100 Hits"></a><figcaption>Route 9 at night. Radio: Z-100 Hits.</figcaption></figure>
+        <figure><a href="images/hollow-pines-night.jpg"><img src="images/hollow-pines-night.jpg" width="1600" height="900" loading="lazy" alt="Hollow Pines State Park at night, the ranger station and a parked car"></a><figcaption>Hollow Pines State Park after midnight.</figcaption></figure>
+        <figure><a href="images/pinecrest-night.jpg"><img src="images/pinecrest-night.jpg" width="1600" height="900" loading="lazy" alt="Pinecrest at night, the Pine Motel and the general store"></a><figcaption>Pinecrest: the Pine Motel and the general store.</figcaption></figure>
+        <figure><a href="images/inventory.jpg"><img src="images/inventory.jpg" width="1600" height="900" loading="lazy" alt="Inventory window, map and quest tracker"></a><figcaption>A 20-slot bag, with tooltips on everything.</figcaption></figure>
+        <figure><a href="images/settings.jpg"><img src="images/settings.jpg" width="1600" height="900" loading="lazy" alt="The settings window with volume, interface size and key bindings"></a><figcaption>Settings (F10): volume, interface size, graphics, every key rebindable.</figcaption></figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="window" aria-labelledby="play-title">
+    <div class="titlebar"><h2 id="play-title">Play it</h2></div>
+    <div class="body">
+      <div class="panel">
+        <p>Millennium is built from source. You need <a href="https://rustup.rs">Rust</a> (stable,
+          1.88 or newer). The first build takes a few minutes; after that it's quick.</p>
+        <h3>Play with friends, no server needed</h3>
+<pre>git clone https://github.com/rsantacroce/millennium.git
+cd millennium
+cargo run --release -p client</pre>
+        <p>Type a screen name and a password, then click <strong>Host Game</strong>. The HUD shows
+          the address your friends type into the <em>Server</em> field (TCP and UDP port 5888).</p>
+        <h3>Or run a dedicated server</h3>
+<pre>docker compose up -d                 # Postgres (or use a SQLite file, see the manual)
+cargo run --release -p server
+cargo run --release -p client        # as many as you like</pre>
+        <p>Full instructions, every control and how the systems work: <a href="manual.html">the manual</a>.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="window" aria-labelledby="tech-title">
+    <div class="titlebar"><h2 id="tech-title">Under the hood</h2></div>
+    <div class="body">
+      <div class="grid">
+        <article class="card"><h3>Rust + Bevy</h3><p>Bevy 0.19 for the client and the headless server, one ECS codebase. The UI is <code>bevy_ui</code>, styled like Windows 2000.</p></article>
+        <article class="card"><h3>Server-authoritative</h3><p>Networking with lightyear 0.30: client prediction and rollback for walking and driving, interpolation for everyone else. The client is never trusted.</p></article>
+        <article class="card"><h3>Content as data</h3><p>Items, NPCs, dialogue, quests, shops and recipes are RON files, checked by unit tests so a typo fails the build, not the game.</p></article>
+        <article class="card"><h3>Persistence</h3><p>PostgreSQL or SQLite. Trades, auctions and house sales are single database transactions, so items can't be lost or duplicated.</p></article>
+        <article class="card"><h3>Procedural audio</h3><p>No sound files: effects and eight music loops are synthesized at startup, from drum patterns written as strings and chords as MIDI notes.</p></article>
+        <article class="card"><h3>Scales out</h3><p>Run all zones in one process, or one zone server per part of the world, linked by a hub that hands players over.</p></article>
+      </div>
+      <p style="margin-bottom:0">What's next: running it for real players (backups, CI, moderation tools), more content (a
+        Y2K New Year's Eve event, more towns, group jobs), and an exploration of a peer-to-peer version
+        and blockchain-backed ownership. See the
+        <a href="https://github.com/rsantacroce/millennium/blob/main/docs/ROADMAP.md">roadmap</a>.</p>
+    </div>
+  </section>
+
+  <footer>
+    Millennium is an original game. All characters, places and brands in it are made up.
+    <br><a href="https://github.com/rsantacroce/millennium">Source</a> ·
+    <a href="manual.html">Manual</a> · <a href="assets.html">Assets</a> ·
+    <a href="https://github.com/rsantacroce/millennium-site">This site's source</a>
+  </footer>
+</main>
+
+<nav class="taskbar" aria-label="Site">
+  <a class="start" href="index.html" aria-current="page">⊞ Millennium</a>
+  <a href="manual.html">Manual</a>
+  <a href="assets.html">Assets</a>
+  <a href="https://github.com/rsantacroce/millennium">Source</a>
+  <span class="clock" id="clock">12:00 AM</span>
+</nav>
+<script src="site.js"></script>
+</body>
+</html>
