@@ -294,14 +294,20 @@ cargo run --release -p client</pre>
     arcade's high-score table, Meridian's ATM, the factory's security panel, the pirate radio
     antenna, the harbor office terminal...</li>
   <li>Walk up, press <kbd>E</kbd> and choose <strong>Hack it</strong>.</li>
-  <li>A green terminal flashes an <strong>access code</strong> (0-9, A-F). Memorize it before it turns into <code>????</code>.</li>
-  <li>Type it and press <kbd>Enter</kbd> before the timer runs out (<kbd>Esc</kbd> gives up).</li>
+  <li>A green terminal asks for an <strong>access code</strong>: 3 to 5 digits, all different.</li>
+  <li>Type a guess and press <kbd>Enter</kbd>. The terminal answers: <code>*</code> for each digit in
+    the right place, <code>+</code> for each right digit in the wrong place, <code>-</code> for none.
+    Example: the code is <code>382</code>, you guess <code>328</code>, it says <code>*++</code>.</li>
+  <li>Narrow it down and crack it before the guesses or the time run out (<kbd>Esc</kbd> gives up).
+    A guess with the wrong number of digits, or a repeated one, doesn't count.</li>
 </ol>
 <p><strong>Success</strong> pays cash and Hacking XP, sometimes loot, and changes reputation. That
-  hack then cools down for you for a while (logging out doesn't reset it). <strong>Failure</strong> trips an alarm: City Services
-  reputation drops and you wait 30 seconds.</p>
-<p>Every 3 levels you have over a hack's requirement removes a digit (never fewer than 3), and the
-  code stays on screen longer. Gear helps: the Acoustic Coupler, the PalmPilot and the ThinkBook
+  hack then cools down for you for a while (logging out doesn't reset it). <strong>Failure</strong>
+  (out of guesses or out of time) trips an alarm: City Services reputation drops and you wait 30
+  seconds.</p>
+<p>You get the code's length plus 5 guesses, and every 3 levels you have over a hack's requirement
+  gives you one more (up to 4 more). Careful play needs about 5 or 6: after each answer, only try
+  codes that fit everything you've learned so far. Gear helps: the Acoustic Coupler, the PalmPilot and the ThinkBook
   laptop. Glitch, behind the Byte Cafe, starts you off with <em>Phreaking 101</em>.
   All hacks and their payouts: <a href="assets.html#hacks">Hacks</a>.</p>
 
@@ -331,6 +337,9 @@ cargo run --release -p client</pre>
 <ul>
   <li>Five houses in Maple Heights are for sale ($400). Talk to a front door to buy one, go in, or
     ring the bell (which lets you in if you're in the owner's party).</li>
+  <li><strong>Moving:</strong> you can own one house at a time. To move, sell yours back from its
+    front door (<em>Sell it</em>, $300), then buy another. Pick up your furniture and empty the
+    footlocker first; the realtor won't take a house with your stuff still in it.</li>
   <li><strong>Furniture</strong> comes from Home Comforts. At home, <em>Use</em> it from your
     inventory to put it down; next to a piece, <kbd>E</kbd> uses it and <kbd>P</kbd> picks it up.</li>
   <li><strong>Home perks:</strong> a stove counts as a frying pan, a workbench helps Mechanics, a

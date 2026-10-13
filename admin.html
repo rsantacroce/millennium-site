@@ -404,9 +404,11 @@ millennium-server --config config/cluster/zone-b.toml</pre>
       <li>Trades, auctions and house sales are single database transactions: items can't be
         duplicated or lost.</li>
     </ul></li>
-  <li><strong>One known weakness:</strong> hacking mini-games can be auto-solved by a modified
-    client. The payouts are small and capped by cooldowns. A cheat-proof design is in
-    <a href="https://github.com/rsantacroce/millennium/blob/main/docs/hacking.md">docs/hacking.md</a>.</li>
+  <li><strong>Hacking can't be cheated:</strong> it's a code-breaking game, and the code never
+    leaves the server. A modified client sees only the answers to its guesses, like a player does,
+    so a bot needs just as many guesses (see
+    <a href="https://github.com/rsantacroce/millennium/blob/main/docs/hacking.md">docs/hacking.md</a>).
+    Cooldowns still limit how often anyone hacks.</li>
   <li><strong>Limits:</strong>
     <ul>
       <li>chat is rate-limited, filtered and capped at 255 characters;</li>
