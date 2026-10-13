@@ -26,6 +26,7 @@
           <li><a href="#money">Making money</a></li>
           <li><a href="#ebid">e-Bid</a></li>
           <li><a href="#fighting">Fighting</a></li>
+          <li><a href="#raids">Raids</a></li>
           <li><a href="#gear">Clothing, food and buffs</a></li>
           <li><a href="#factions">Factions</a></li>
           <li><a href="#hacking">Hacking</a></li>
@@ -151,12 +152,19 @@ cargo run --release -p client</pre>
 <tr><td>Downtown</td><td>West end of Maple St (drivers only)</td><td>Route 9</td></tr>
 <tr><td>Downtown</td><td>East end of Maple St (drivers only)</td><td>Abandoned Factory</td></tr>
 <tr><td>Docks, Mall, Factory, Maple Heights</td><td>Metro</td><td>Downtown</td></tr>
-<tr><td>Route 9</td><td>Highway east / west / the side road (drivers)</td><td>Downtown / Pinecrest / Hollow Pines</td></tr>
-<tr><td>Route 9, Pinecrest</td><td>Bus stop</td><td>Downtown</td></tr>
+<tr><td>Route 9</td><td>Highway east / west (drivers)</td><td>Downtown / Pinecrest</td></tr>
+<tr><td>Route 9</td><td>North turnoff / south turnoff (drivers)</td><td>Hollow Pines / Lake Wren</td></tr>
+<tr><td>Pinecrest</td><td>West end of the highway (drivers)</td><td>Mile 88 Truck Stop</td></tr>
+<tr><td>Route 9, Pinecrest, Lake Wren, the truck stop</td><td>Bus stop</td><td>Downtown</td></tr>
 <tr><td>Hollow Pines</td><td>Shuttle bus</td><td>Pinecrest</td></tr>
 </tbody></table></div>
 <p>Exits marked <em>drivers only</em> are highways: you need a car (see <a href="#cars">Cars</a>).
-  Walkers can always ride a bus back to town. On the rooftops, stay on the roofs and the planks
+  Walkers can always ride a bus back to town.</p>
+<p><strong>The road trip:</strong> Kat, outside Spin City Records downtown, is making a zine about
+  Route 9 and wants a souvenir from each stop: the Gas-N-Go, Gus's bait shop in <em>Lake Wren</em>
+  and Mama Jo's diner at the <em>Mile 88 Truck Stop</em> (<em>Route 9 Revisited</em>). After that,
+  Big Ray at the truck stop has a long haul for you.</p>
+<p>On the rooftops, stay on the roofs and the planks
   between them: there's nowhere else to stand.</p>
 
 <h2 id="skills">7. Skills</h2>
@@ -168,7 +176,7 @@ cargo run --release -p client</pre>
 <tbody>
 <tr><td><strong>Electronics</strong></td><td>Repair broken gadgets (modems, walkmans, handhelds, camcorders) to sell at a profit.</td><td>Repairs with a Screwdriver Set; quests.</td></tr>
 <tr><td><strong>Mechanics</strong></td><td>Rebuild car parts with a wrench.</td><td>Rusty carburetors, seized alternators; Old Earl's quests.</td></tr>
-<tr><td><strong>Cooking</strong></td><td>Meals heal and give timed skill boosts.</td><td>Cooking with a frying pan (or your stove at home).</td></tr>
+<tr><td><strong>Cooking</strong></td><td>Meals heal and give timed skill boosts.</td><td>Cooking with a frying pan (or your stove at home); fishing at Lake Wren.</td></tr>
 <tr><td><strong>Fitness</strong></td><td>+6 health per level, +1 damage every 3 levels.</td><td>Knocking out rivals.</td></tr>
 <tr><td><strong>Driving</strong></td><td>Your time behind the wheel.</td><td>Driving around and winning races.</td></tr>
 <tr><td><strong>Hacking</strong></td><td>Hack payphones, ATMs and terminals. Higher levels mean shorter codes, shown longer.</td><td>Successful hacks; practice on your own computer at home.</td></tr>
@@ -186,6 +194,9 @@ cargo run --release -p client</pre>
     for a while (down to 35%); it recovers over time. Spread your sales around.</li>
   <li><strong>Limited stock:</strong> cheap repair inputs sell out and restock over time. The shop
     shows how many are left.</li>
+  <li><strong>Fishing</strong> at Lake Wren: cheap bait, a little Cooking XP, and fish that the
+    lake's shops buy or that you can fry.</li>
+  <li><strong>Raids</strong> pay well, if you have friends (see <a href="#raids">Raids</a>).</li>
   <li><strong>Quests</strong> pay cash, XP, items and reputation. <strong>Hacks</strong> pay small
     amounts of cash. <strong>Rivals</strong> drop cash and loot.</li>
 </ul>
@@ -217,8 +228,31 @@ cargo run --release -p client</pre>
   <li>Health comes back slowly a few seconds after the last hit. Getting knocked out just wakes you up at the zone's safe spot (by the Metro downtown), with full health and nothing lost.</li>
   <li>In a party, members within 30 m share the XP and quest credit.</li>
 </ul>
+<p><strong>Animals:</strong> not everything that bites is a person. Junkyard dogs guard the
+  factory yard, raccoons raid the downtown alleys at night (and Lake Wren's boathouse all day), and
+  deer roam Hollow Pines. Deer never fight: they run, and you have to corner one to tag it for Ranger
+  Dale's <em>Deer Count</em>.</p>
 <p>The Galleria Mall is a no-fighting zone. Drivers can't fight, and rivals ignore them. Who is where
   and how tough they are: <a href="assets.html#rivals">Rivals</a>.</p>
+
+<h2 id="raids">10b. Raids</h2>
+<p>Raids are jobs for a party of 3 to 5. Get your party together (<code>/invite NAME</code>), stand
+  together next to the person who offers the job, and pick the raid option. Everyone in the party is
+  taken inside together.</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Raid</th><th>Who offers it</th><th>Needs</th><th>Reward (each)</th></tr></thead>
+<tbody>
+<tr><td><strong>The Meridian Vault</strong></td><td>Cipher, outside the Meridian building downtown</td><td>Hacking 5</td><td>$220, Fitness and Hacking XP, a Meridian Security Blazer; Zer0 Day likes it, Meridian doesn't</td></tr>
+<tr><td><strong>The Harbor Smugglers</strong></td><td>Foreman Rizzo, at the docks</td><td>Fitness 5</td><td>$200, Fitness and Trading XP, a Captain's Peacoat; the Dockside Crew and the city like it</td></tr>
+</tbody></table></div>
+<ul>
+  <li>There are <strong>three waves</strong>, the last with the boss, and <strong>ten minutes</strong>.
+    The top of the screen shows the wave, how many are left and the time.</li>
+  <li>Getting knocked out wakes you up at the entrance: get back in the fight.</li>
+  <li>Everyone still inside when the boss goes down gets the reward. Leave early and you get nothing.</li>
+  <li>After a win you can't do that raid again for an hour (logging out doesn't reset it).</li>
+  <li>Only one party can be in a raid at a time: if it's busy, try again in a few minutes.</li>
+</ul>
 
 <h2 id="gear">11. Clothing, food and buffs</h2>
 <ul>
@@ -226,7 +260,11 @@ cargo run --release -p client</pre>
     <em>Use</em> one to wear it; the inventory lists what you're wearing, with <strong>Off</strong>
     buttons. Clothing gives armor, extra health and bonus skill levels, and shows on your character.</li>
   <li><strong>Food:</strong> heals, and some meals give a temporary bonus in a skill (shown on the
-    HUD). Eating again refreshes the buff; buffs don't stack and end when you log out.</li>
+    HUD). Eating again refreshes the buff; buffs don't stack. They keep counting down while
+    you're logged out.</li>
+  <li><strong>Fishing:</strong> buy a Fishing Rod and bait from Gus's Bait &amp; Tackle in Lake
+    Wren, stand at the Fishing Spot at the end of the pier and <em>Use</em> the bait.
+    Nightcrawlers catch perch; at Cooking 4, minnows catch walleye. Fry them with a frying pan.</li>
 </ul>
 
 <h2 id="factions">12. Factions and reputation</h2>
@@ -234,6 +272,18 @@ cargo run --release -p client</pre>
   the <strong>Dockside Crew</strong> and the <strong>Zer0 Day</strong> hackers. Quests, fights and
   hacks raise or lower your standing with them, from Hostile through Unfriendly, Neutral, Friendly
   and Honored to Revered.</p>
+<p><strong>Storylines with a choice.</strong> Three of them end with you holding something two
+  factions both want, and whoever you give it to decides whose side you're on. You can't take it back,
+  and the other side remembers:</p>
+<ul>
+  <li><strong>The Leak</strong> (Mr. Pemberton, Meridian): who's leaking Meridian's Y2K memos? Give the
+    proof to Meridian, or to Zer0 Day. (Cipher won't run the vault job for anyone who sold them out.)</li>
+  <li><strong>Paper Trail</strong> (Officer Pruitt): cargo goes missing at the docks. Take Rizzo's
+    other ledger to the police, or give it back to the docks. (The Dockside Crew doesn't work with
+    people who talk to the cops.)</li>
+  <li><strong>The Petition</strong> (Foreman Rizzo): get signatures against Meridian's Harbor Plaza,
+    then file the petition with the city, or sell it to Meridian.</li>
+</ul>
 <p>Faction shops give 5% off when you're Friendly, 10% when Honored and 15% when Revered, and keep
   some of their best gear for good customers. Some dialogue only opens up with enough reputation.
   Watch out: hacking Meridian's ATM won't make you friends there.</p>
@@ -248,7 +298,7 @@ cargo run --release -p client</pre>
   <li>Type it and press <kbd>Enter</kbd> before the timer runs out (<kbd>Esc</kbd> gives up).</li>
 </ol>
 <p><strong>Success</strong> pays cash and Hacking XP, sometimes loot, and changes reputation. That
-  hack then cools down for you for a while. <strong>Failure</strong> trips an alarm: City Services
+  hack then cools down for you for a while (logging out doesn't reset it). <strong>Failure</strong> trips an alarm: City Services
   reputation drops and you wait 30 seconds.</p>
 <p>Every 3 levels you have over a hack's requirement removes a digit (never fewer than 3), and the
   code stays on screen longer. Gear helps: the Acoustic Coupler, the PalmPilot and the ThinkBook
@@ -259,7 +309,13 @@ cargo run --release -p client</pre>
 <ul>
   <li><strong>Getting a car:</strong> Old Earl at the Abandoned Factory will give you his old
     hatchback if you get it running (the quest <em>Earl's Junker</em>: a rebuilt carburetor, a car
-    battery, two spark plugs and Mechanics level 3).</li>
+    battery, two spark plugs and Mechanics level 3). Or buy one from <strong>Fast Eddie's Used
+    Cars</strong> on Route 9: a minivan ($550), a pickup ($650), the turbo coupe ($1,200, Driving 5)
+    or a roadster ($2,000, Driving 10). You can own several.</li>
+  <li><strong>Paint and parts:</strong> park outside Hank's Garage in Pinecrest. Hank paints it any of
+    eight colors ($60), and fits parts you bring for free: Sport Tires and a Body Kit (from Hank), and
+    a Turbo Kit (from Wanda at Diesel Bay, Mile 88 Truck Stop). Parts make the car faster, grippier
+    or both, and they show.</li>
   <li><strong>Driving:</strong> <kbd>G</kbd> gets in when "[G] Drive your ..." shows. Steer with
     WASD, or click where you want to go. Pull back while stopped to reverse and turn around.
     <kbd>G</kbd> again (when stopped) gets out. Cars stay parked where you leave them, even when you log off.</li>
@@ -278,7 +334,9 @@ cargo run --release -p client</pre>
   <li><strong>Furniture</strong> comes from Home Comforts. At home, <em>Use</em> it from your
     inventory to put it down; next to a piece, <kbd>E</kbd> uses it and <kbd>P</kbd> picks it up.</li>
   <li><strong>Home perks:</strong> a stove counts as a frying pan, a workbench helps Mechanics, a
-    computer lets you practice hacking, a waterbed leaves you Well Rested, a TV has something on.</li>
+    computer lets you practice hacking, a waterbed leaves you Well Rested, a TV has something on.
+    Newer pieces: a beanbag (Comfy: +1 Hacking for a while), an arcade cabinet, an aquarium, a boombox
+    and a bowling trophy. Each one's perk is on the <a href="assets.html#items">asset list</a>.</li>
   <li><strong>The footlocker</strong> stores 20 stacks: open it and select an item in your
     inventory to store it.</li>
 </ul>
