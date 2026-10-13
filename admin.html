@@ -1,0 +1,441 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Millennium Admin Guide</title>
+<meta name="description" content="Running a Millennium server: hosting options, security, every setting, moderation, events, backups, upgrades, monitoring, capacity and clusters.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%230a246a'/%3E%3Ctext x='8' y='12.5' font-family='Tahoma,Verdana,sans-serif' font-size='12' font-weight='bold' fill='white' text-anchor='middle'%3EM%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main class="desktop">
+  <div class="window">
+    <div class="titlebar"><h1>Millennium Admin Guide - Help</h1><div class="controls" aria-hidden="true"><span>_</span><span>□</span><span>x</span></div></div>
+    <div class="body with-sidebar">
+      <nav class="sidebar panel" aria-label="Contents">
+        <strong>Contents</strong>
+        <ol>
+          <li><a href="#ways">Ways to run a world</a></li>
+          <li><a href="#checklist">Before you open the doors</a></li>
+          <li><a href="#install">Installing a server</a></li>
+          <li><a href="#settings">Every setting</a></li>
+          <li><a href="#admins">Being an admin</a></li>
+          <li><a href="#reports">Reports, mutes and bans</a></li>
+          <li><a href="#accounts">Helping players with accounts</a></li>
+          <li><a href="#events">Running events</a></li>
+          <li><a href="#backups">Backups and restores</a></li>
+          <li><a href="#upgrades">Upgrades</a></li>
+          <li><a href="#monitoring">Monitoring</a></li>
+          <li><a href="#capacity">Capacity and performance</a></li>
+          <li><a href="#cluster">Bigger worlds: clusters</a></li>
+          <li><a href="#security">How it keeps players safe</a></li>
+          <li><a href="#trouble">Troubleshooting</a></li>
+        </ol>
+        <p class="muted" style="margin:10px 0 0">For playing the game, see the <a href="manual.html">player manual</a>.</p>
+      </nav>
+
+      <div class="panel">
+
+<h2 id="ways">1. Ways to run a world</h2>
+<div class="table-wrap"><table>
+<thead><tr><th>Setup</th><th>Good for</th><th>How</th></tr></thead>
+<tbody>
+<tr><td><strong>Host Game</strong></td><td>A few friends, now. Nothing to install beyond the game.</td><td>Click <strong>Host Game</strong> on the sign-on screen. Your computer runs the world (saved to <code>saves/world.db</code>, backed up hourly) and you're its admin.</td></tr>
+<tr><td><strong>Dedicated server</strong></td><td>A world that's always on: a club, a community, a public server.</td><td>Docker, or a systemd service on Linux (<a href="#install">below</a>). SQLite or PostgreSQL.</td></tr>
+<tr><td><strong>Cluster</strong></td><td>More players than one process should carry.</td><td>Several zone servers plus a world hub, sharing one Postgres (<a href="#cluster">below</a>).</td></tr>
+</tbody></table></div>
+<p><strong>SQLite or PostgreSQL?</strong></p>
+<ul>
+  <li><strong>SQLite</strong> is one file and nothing else to run. It's fine for one server and backs
+    itself up automatically.</li>
+  <li><strong>PostgreSQL</strong> is for clusters, for very busy worlds, or if you already run it.</li>
+</ul>
+<p>Both are tested on every change, including a crash-and-restore test.</p>
+
+<h2 id="checklist">2. Before you open the doors</h2>
+<ol>
+  <li><strong>Set a signing key.</strong> Run <code>millennium-server --generate-key</code> and put the
+    result in <code>network.private_key</code>, or in the <code>MILLENNIUM_PRIVATE_KEY</code> environment
+    variable. Without it the server uses an all-zero development key, warns at startup, and anyone
+    could forge a login.</li>
+  <li><strong>Name your admins</strong> in <code>[chat] admins</code>. These are account names, not
+    character names.</li>
+  <li><strong>Open port 5888 for TCP and UDP.</strong> TCP is the login, UDP is the game. Players need
+    both.</li>
+  <li><strong>Check your backups.</strong> SQLite backs itself up. For Postgres, enable the backup
+    timer and try a restore once.</li>
+  <li><strong>Turn on the status page</strong> (<code>[metrics] bind = "127.0.0.1:9188"</code>), and
+    keep it private.</li>
+  <li><strong>Change the default Postgres password</strong> if you use the bundled
+    <code>docker-compose.yml</code>.</li>
+  <li><strong>Optional:</strong> your own blocked words, the length of a day, and an event on the
+    calendar.</li>
+</ol>
+
+<h2 id="install">3. Installing a server</h2>
+<h3>Docker (SQLite in a volume)</h3>
+<pre>git clone https://github.com/rsantacroce/millennium.git &amp;&amp; cd millennium
+docker build -t millennium-server .
+docker run -d --name millennium --restart unless-stopped \
+  -p 5888:5888/tcp -p 5888:5888/udp -v millennium:/data \
+  -e MILLENNIUM_PRIVATE_KEY=$(openssl rand -hex 32) millennium-server</pre>
+<p>Everything lives in the volume:</p>
+<ul>
+  <li><code>world.db</code>: the world.</li>
+  <li><code>backups/</code>: the automatic backups.</li>
+  <li><code>tls/</code>: the login certificate. Keep it: if it changes, players get an "identity
+    changed" warning.</li>
+</ul>
+<p>Map the port to the <em>same</em> number on the host: clients are sent to port 5888 of the
+  address they logged in on.</p>
+<h3>Docker with Postgres</h3>
+<pre>echo "MILLENNIUM_PRIVATE_KEY=$(openssl rand -hex 32)" &gt; .env
+docker compose --profile server up -d --build</pre>
+<h3>systemd (Linux)</h3>
+<pre>cargo build --release -p server
+sudo install -m 755 target/release/millennium-server /usr/local/bin/
+sudo useradd --system --home-dir /var/lib/millennium --create-home millennium
+sudo mkdir -p /etc/millennium &amp;&amp; sudo cp config/server.toml /etc/millennium/
+sudo cp deploy/millennium-server.service /etc/systemd/system/
+sudo systemctl daemon-reload &amp;&amp; sudo systemctl enable --now millennium-server</pre>
+<p>Put secrets (<code>MILLENNIUM_PRIVATE_KEY</code>, <code>DATABASE_URL</code>) in
+  <code>/etc/millennium/env</code>, readable only by root.</p>
+<p>The unit restarts the server if it crashes, only lets it write to
+  <code>/var/lib/millennium</code>, and stops it with SIGINT: the clean shutdown that saves everyone
+  online first.</p>
+<p>Step by step, with every detail:
+  <a href="https://github.com/rsantacroce/millennium/blob/main/docs/deploy.md">docs/deploy.md</a>.</p>
+
+<h2 id="settings">4. Every setting</h2>
+<p>All in <code>config/server.toml</code> (or <code>/etc/millennium/server.toml</code>). Every key is
+  optional: a missing key takes the default shown.</p>
+<p>Environment variables override the file:</p>
+<ul>
+  <li><code>DATABASE_URL</code></li>
+  <li><code>MILLENNIUM_PRIVATE_KEY</code></li>
+  <li><code>MILLENNIUM_CLUSTER_SECRET</code></li>
+  <li><code>RUST_LOG</code></li>
+</ul>
+<h3>Top level</h3>
+<div class="table-wrap"><table>
+<thead><tr><th>Key</th><th>Default</th><th>What it does</th></tr></thead>
+<tbody>
+<tr><td><code>log_filter</code></td><td>info</td><td>Log levels, e.g. <code>info,server=debug</code>. <code>RUST_LOG</code> overrides it.</td></tr>
+<tr><td><code>multi_threaded</code></td><td>false</td><td>Run the simulation on several threads. Off is faster for this game (see <a href="#capacity">Capacity</a>).</td></tr>
+</tbody></table></div>
+<h3>[network]</h3>
+<div class="table-wrap"><table>
+<thead><tr><th>Key</th><th>Default</th><th>What it does</th></tr></thead>
+<tbody>
+<tr><td><code>bind</code></td><td>0.0.0.0:5888</td><td>The game (UDP).</td></tr>
+<tr><td><code>auth_bind</code></td><td>0.0.0.0:5888</td><td>The login service (TLS over TCP). Clients assume the same port number as the game.</td></tr>
+<tr><td><code>tls_dir</code></td><td>saves/tls</td><td>Where the login certificate is created on first start. Back it up.</td></tr>
+<tr><td><code>private_key</code></td><td>(empty: development key)</td><td>64 hex characters that sign connect tokens. Set it for any real server.</td></tr>
+<tr><td><code>max_clients</code></td><td>64</td><td>Players connected at once. See <a href="#capacity">Capacity</a> before raising it a lot.</td></tr>
+</tbody></table></div>
+<h3>[database]</h3>
+<div class="table-wrap"><table>
+<thead><tr><th>Key</th><th>Default</th><th>What it does</th></tr></thead>
+<tbody>
+<tr><td><code>url</code></td><td>(empty: in memory)</td><td><code>sqlite://saves/world.db</code>, <code>postgres://user:pass@host:5432/db</code>, or empty for a world that's forgotten on restart (testing only).</td></tr>
+<tr><td><code>max_connections</code></td><td>5</td><td>Postgres connection pool size.</td></tr>
+<tr><td><code>save_interval_secs</code></td><td>10</td><td>How often positions are written. Everything else (items, cash, quests...) is saved the moment it changes.</td></tr>
+<tr><td><code>backup_dir</code></td><td>saves/backups</td><td>SQLite only: where automatic backups go.</td></tr>
+<tr><td><code>backup_interval_minutes</code></td><td>60</td><td>SQLite only: a backup at startup and then this often (0 = off).</td></tr>
+<tr><td><code>backup_keep</code></td><td>48</td><td>SQLite only: how many backups to keep.</td></tr>
+</tbody></table></div>
+<h3>[chat]</h3>
+<div class="table-wrap"><table>
+<thead><tr><th>Key</th><th>Default</th><th>What it does</th></tr></thead>
+<tbody>
+<tr><td><code>admins</code></td><td>[]</td><td>Account names with admin powers (see <a href="#admins">Being an admin</a>).</td></tr>
+<tr><td><code>burst</code>, <code>per_second</code></td><td>5, 1</td><td>Chat rate limit: bursts of 5 messages, then 1 per second.</td></tr>
+<tr><td><code>strikes_before_mute</code>, <code>auto_mute_secs</code></td><td>5, 60</td><td>Hitting the limit 5 times in a row means an automatic 60 s mute.</td></tr>
+<tr><td><code>history_global</code>, <code>history_whispers</code></td><td>50, 50</td><td>Lines of global chat and whispers replayed at login.</td></tr>
+<tr><td><code>blocked_words</code></td><td>[]</td><td>Whole words replaced in chat. Case doesn't matter, and <code>d4rn</code> and <code>daaarn</code> are caught too.</td></tr>
+</tbody></table></div>
+<h3>[world]</h3>
+<div class="table-wrap"><table>
+<thead><tr><th>Key</th><th>Default</th><th>What it does</th></tr></thead>
+<tbody>
+<tr><td><code>day_minutes</code></td><td>40</td><td>Real minutes per game day. Clients get it when they log in.</td></tr>
+<tr><td><code>clock_shift_hours</code></td><td>0</td><td>Moves the clock (12 = start at night). Use the same value on every server of a cluster.</td></tr>
+<tr><td><code>y2k_event_at</code></td><td>(none)</td><td>Schedule the Y2K event: midnight as an RFC 3339 time, e.g. <code>"1999-12-31T23:00:00Z"</code>.</td></tr>
+<tr><td><code>y2k_countdown_minutes</code></td><td>10</td><td>How long before that midnight the countdown starts.</td></tr>
+<tr><td><code>y2k_minutes</code></td><td>30</td><td>How long the city has to fix the bug.</td></tr>
+</tbody></table></div>
+<h3>[metrics]</h3>
+<div class="table-wrap"><table>
+<thead><tr><th>Key</th><th>Default</th><th>What it does</th></tr></thead>
+<tbody>
+<tr><td><code>bind</code></td><td>(empty: off)</td><td>Address for the status page, <code>/metrics</code> and <code>/health</code>. Keep it private (127.0.0.1 or firewalled).</td></tr>
+<tr><td><code>log_every_secs</code></td><td>60</td><td>A status line in the log this often (0 = never).</td></tr>
+</tbody></table></div>
+<h3>[cluster] and [hub]</h3>
+<p>Only for running the world on several servers: see <a href="#cluster">Bigger worlds</a>.</p>
+
+<h2 id="admins">5. Being an admin</h2>
+<p>Add your <em>account</em> name to <code>[chat] admins</code> and restart the server. With Host
+  Game, the host's account is the admin automatically. Admin commands are typed in the chat
+  box.</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Command</th><th>What it does</th></tr></thead>
+<tbody>
+<tr><td><code>/admin</code></td><td>The admin window: everyone on this server (with Kick, Mute and Ban buttons) and the open player reports. It refreshes itself every 10 seconds.</td></tr>
+<tr><td><code>/mute name [minutes]</code>, <code>/unmute name</code></td><td>No chat for that long (default 10). The account stays muted across logins.</td></tr>
+<tr><td><code>/mod kick name [reason]</code></td><td>Disconnect them now. They can log back in.</td></tr>
+<tr><td><code>/mod ban name [hours|perm] [reason]</code></td><td>Disconnect them and refuse the account. The default is 24 hours; <code>perm</code> means for good. They see the reason and the end time when they try to log in.</td></tr>
+<tr><td><code>/mod unban name</code></td><td>Lift a ban.</td></tr>
+<tr><td><code>/mod reports</code>, <code>/mod resolve id</code></td><td>List open reports in chat; close one.</td></tr>
+<tr><td><code>/mod resetcode name</code></td><td>A new password recovery code for a player who lost theirs (see <a href="#accounts">accounts</a>).</td></tr>
+<tr><td><code>/mod event y2k [minutes] [goal]</code>, <code>/mod event stop</code></td><td>Start or call off the New Year's Eve event (see <a href="#events">events</a>).</td></tr>
+<tr><td><code>/give item [n]</code>, <code>/givecash n</code>, <code>/givexp skill n</code>, <code>/givecar model</code></td><td>For testing: give <em>yourself</em> items, cash, XP or a car. Item ids are on the <a href="assets.html#items">asset list</a>.</td></tr>
+</tbody></table></div>
+<p class="tip">Kicks, bans, recovery codes and events go in the server log with the admin's name,
+  so there's a record if you ever need one.</p>
+
+<h2 id="reports">6. Reports, mutes and bans</h2>
+<ul>
+  <li><strong>Players report</strong> with <code>/report name what happened</code> (once every 30
+    seconds each). The report saves that player's last 10 lines of chat, as the server saw them,
+    so you see what was actually said, not just the complaint.</li>
+  <li><strong>Admins who are online</strong> get a notice right away. Open <code>/admin</code> and
+    rest the mouse on a report to read the chat it came with.</li>
+  <li><strong>A suggested ladder:</strong>
+    <ol>
+      <li>a word in a whisper;</li>
+      <li>a mute (<code>/mute name 30</code>);</li>
+      <li>a kick;</li>
+      <li>a ban that grows: 24 hours, then a week (<code>/mod ban name 168 reason</code>), then
+        permanent.</li>
+    </ol>
+    Always give a reason: the player sees it.</li>
+  <li><strong>Close the report</strong> when it's dealt with (Resolve, or <code>/mod resolve id</code>).</li>
+  <li><strong>Bans are on the account,</strong> so making a new character doesn't get around them. A
+    banned account can't be deleted either, so the record stays.</li>
+  <li><strong>Automatic protection:</strong> flooding chat earns a 60-second mute without you
+    lifting a finger. Blocked words are filtered on the server, so a modified client can't skip
+    the filter.</li>
+</ul>
+
+<h2 id="accounts">7. Helping players with accounts</h2>
+<ul>
+  <li><strong>Forgotten password:</strong> accounts have no email address. Every account gets a
+    <em>recovery code</em> (like <code>K7QM-2XVD-PR9T</code>), shown once when it's created, and the
+    player resets the password themselves with <em>Forgot password?</em> on the sign-on screen.</li>
+  <li><strong>Lost the code too?</strong> Check they really own the account (ask about their
+    characters, their crew, what's in their house). Then <code>/mod resetcode name</code> gives
+    <em>you</em> a fresh code to pass on privately, for example by whisper. It replaces their old
+    one. You never see or set passwords.</li>
+  <li><strong>Changing a password:</strong> <em>Change password</em> on the sign-on screen (the
+    current password is needed).</li>
+  <li><strong>Deleting an account:</strong> players do it themselves with <em>Delete account</em>,
+    which needs the password and typing DELETE. It's immediate and permanent:
+    <ul>
+      <li>its characters, items, cash and house go;</li>
+      <li>bidders on its auctions are refunded through e-Bid claims;</li>
+      <li>a crew it led passes to the longest-standing member.</li>
+    </ul>
+    If they're online they're logged out first.</li>
+  <li><strong>Too many failed logins</strong> (10 within 10 minutes from one address) lock that
+    address out for a few minutes. It clears by itself.</li>
+</ul>
+
+<h2 id="events">8. Running events</h2>
+<h3>Y2K: New Year's Eve 1999</h3>
+<ul>
+  <li><strong>Start it now:</strong> <code>/mod event y2k</code> gives a 10-minute countdown and a goal
+    based on how many are online at midnight. <code>/mod event y2k 2 60</code> gives a 2-minute
+    countdown and a goal of 60.</li>
+  <li><strong>Or schedule it:</strong> set <code>y2k_event_at</code> in <code>[world]</code>. The
+    countdown starts <code>y2k_countdown_minutes</code> before.</li>
+  <li><strong>What players do:</strong>
+    <ul>
+      <li>fix glitched terminals (Screwdriver Set, 5 points);</li>
+      <li>restart Metro generators (Wrench, 8);</li>
+      <li>bring hot cocoa to stranded commuters (3);</li>
+      <li>stomp Y2K Bugs (1).</li>
+    </ul></li>
+  <li><strong>Choosing a goal:</strong> the default is 30 plus 15 per player online at midnight,
+    meant to be comfortably reachable. Raise it for a challenge (most jobs mean walking across
+    town), or lower it for a short, casual event.</li>
+  <li><strong>If they make it</strong> before <code>y2k_minutes</code> runs out, there's a party with
+    fireworks. Everyone who helped and is still online gets the "I Survived Y2K" T-shirt, a
+    floppy disk for their house and City Services reputation. If not, helpers keep the floppy.</li>
+  <li><strong>Call it off</strong> with <code>/mod event stop</code>.</li>
+  <li><strong>Tips:</strong>
+    <ul>
+      <li>Announce it in global chat beforehand.</li>
+      <li>Remind people to bring a Screwdriver Set and a Wrench.</li>
+      <li>Cocoa mix is sold at the Corner Store and Value Grocer.</li>
+    </ul></li>
+  <li><strong>In a cluster,</strong> each zone server runs its own share: start it on each one.</li>
+</ul>
+
+<h2 id="backups">9. Backups and restores</h2>
+<h3>SQLite: automatic</h3>
+<ul>
+  <li><strong>When:</strong> a consistent copy at every start and then every hour, made while the
+    game runs.</li>
+  <li><strong>Where:</strong> <code>saves/backups/</code>, or <code>/data/backups</code> in Docker.</li>
+  <li><strong>How many:</strong> the newest 48.</li>
+</ul>
+<p>Copy that folder off the machine now and then (rsync, restic, your cloud's snapshots).</p>
+<p><strong>To restore:</strong></p>
+<ol>
+  <li>Stop the server.</li>
+  <li>Copy the backup over the save file.</li>
+  <li>Delete the <code>-wal</code> and <code>-shm</code> files next to it.</li>
+  <li>Start the server.</li>
+</ol>
+<pre>systemctl stop millennium-server
+cp saves/backups/world-20261012-120000-01.db world.db &amp;&amp; rm -f world.db-wal world.db-shm
+systemctl start millennium-server</pre>
+<h3>PostgreSQL: a timer</h3>
+<p><code>scripts/backup-postgres.sh</code> takes a <code>pg_dump</code> (safe while the server runs) and
+  keeps the newest copies. Enable the hourly timer in <code>deploy/</code>.</p>
+<p><strong>To restore:</strong></p>
+<pre>DATABASE_URL=postgres://... scripts/restore-postgres.sh saves/backups/millennium-20261012-120000.dump</pre>
+<p class="tip">Do a test restore once, into a new database, before you need one for real. The
+  project's own tests do exactly that on every change.</p>
+
+<h2 id="upgrades">10. Upgrades</h2>
+<ol>
+  <li><strong>Take a backup</strong> (SQLite does one at every start anyway).</li>
+  <li><strong>Get the new version</strong> (<code>git pull</code>) and build it (<code>cargo build
+    --release -p server</code>, or <code>docker compose build</code>).</li>
+  <li><strong>Restart.</strong> Database changes (migrations) apply themselves at startup.</li>
+  <li><strong>Tell your players to update their game too.</strong> An older client is told it's
+    out of date when it tries to log in.</li>
+</ol>
+
+<h2 id="monitoring">11. Monitoring</h2>
+<ul>
+  <li><strong>The status page:</strong> with <code>[metrics] bind = "127.0.0.1:9188"</code>, open
+    <code>http://127.0.0.1:9188/</code>. From your laptop, use an SSH tunnel:
+    <code>ssh -L 9188:127.0.0.1:9188 your-server</code>. It shows players per zone, frame time,
+    database speed and bandwidth, and refreshes every 5 seconds.</li>
+  <li><strong>Prometheus and Grafana:</strong> scrape <code>/metrics</code>. Uptime checks:
+    <code>/health</code> answers <code>ok</code>.</li>
+  <li><strong>The log:</strong> a status line every minute, such as <em>status: 12 players
+    (Downtown 9, Harbor Docks 3), frame 0.9 ms avg / 4.1 ms max at 190/s, db 0.3 ms avg ...</em>.
+    Plus logins, kicks, bans, backups, events and errors.</li>
+</ul>
+<div class="table-wrap"><table>
+<thead><tr><th>Metric</th><th>Healthy</th><th>If it isn't</th></tr></thead>
+<tbody>
+<tr><td><code>millennium_frame_seconds_avg</code> / <code>_max</code></td><td>A few ms average; max under 33 ms (one tick)</td><td>The server is overloaded: fewer players per process, or a cluster.</td></tr>
+<tr><td><code>millennium_db_command_seconds_avg</code>, <code>millennium_db_queue_length</code></td><td>Under a few ms; queue near 0</td><td>A slow disk or database: saves and logins lag.</td></tr>
+<tr><td><code>millennium_network_sent_bytes_total</code> (rate)</td><td>About 3-10 KB/s per player</td><td>Lots of players crowded together: expected; plan bandwidth for it.</td></tr>
+<tr><td><code>millennium_players_online</code>, <code>_by_zone</code></td><td>Your normal crowd</td><td>A sudden drop: check the log and the UDP firewall.</td></tr>
+<tr><td><code>millennium_channel_sent_bytes_total{channel=...}</code></td><td>Mostly <em>Mutations</em> (movement)</td><td>Useful for finding out what's using the bandwidth.</td></tr>
+</tbody></table></div>
+
+<h2 id="capacity">12. Capacity and performance</h2>
+<p>Measured with the project's load test (200 bots wandering the same few blocks, all on one
+  Apple M4 Pro):</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Players</th><th>Frame time (avg / worst)</th><th>CPU</th><th>Memory</th><th>Sent per player</th></tr></thead>
+<tbody>
+<tr><td>200, mostly in one zone</td><td>2.8 ms / 27 ms (33 ms budget)</td><td>about 60% of one core</td><td>about 265 MB</td><td>8.4 KB/s</td></tr>
+</tbody></table></div>
+<ul>
+  <li><strong>A small VPS</strong> (1-2 vCPU, 1-2 GB of RAM) comfortably runs a world for dozens of
+    players. 200 is fine on one modern core.</li>
+  <li><strong>Bandwidth</strong> goes up when players crowd together:
+    <ul>
+      <li>players only receive the people within about 40 m;</li>
+      <li>those further than 15 m are updated half as often;</li>
+      <li>positions are sent compactly.</li>
+    </ul>
+    Plan for about 10 KB/s per player at peak.</li>
+  <li><strong>Test your own machine</strong> with
+    <code>scripts/loadtest.sh 100 120</code>. It needs the source and a Rust toolchain.</li>
+  <li><strong>Slow frames?</strong> Build with <code>cargo build --release -p server --features
+    profile</code>. The server then logs any frame slower than <code>MILLENNIUM_SLOW_FRAME_MS</code>
+    (20) with the systems that took longest.</li>
+  <li><strong>Leave <code>multi_threaded</code> off:</strong> in testing, one thread had far fewer
+    slow frames.</li>
+</ul>
+
+<h2 id="cluster">13. Bigger worlds: clusters</h2>
+<p>When one process isn't enough, split the zones over several <strong>zone servers</strong> linked
+  by a <strong>world hub</strong>. <code>config/cluster/</code> in the source has a worked example.</p>
+<pre>millennium-server --hub --config config/cluster/hub.toml
+millennium-server --config config/cluster/zone-a.toml
+millennium-server --config config/cluster/zone-b.toml</pre>
+<ul>
+  <li><strong>Shared by every zone server:</strong> the same Postgres database, the same
+    <code>network.private_key</code> and the same <code>[cluster] secret</code> (or
+    <code>MILLENNIUM_CLUSTER_SECRET</code>).</li>
+  <li><strong>Each zone server's own settings:</strong>
+    <ul>
+      <li><code>[cluster] zones</code>: its zones;</li>
+      <li><code>[cluster] hub</code>: the hub's address;</li>
+      <li><code>[[cluster.servers]]</code>: where the other zones run, as players reach them.</li>
+    </ul></li>
+  <li><strong>The hub</strong> is small and keeps no game state. It relays presence, global,
+    whisper and crew chat, and parties. Keep its port (<code>[hub] bind</code>) private.</li>
+  <li><strong>Moving between servers</strong> is seamless: walking or driving into a zone on another
+    server saves you and hands you over in a second.</li>
+  <li><strong>Limits:</strong> trades only work on the same server, food buffs end when you change
+    servers, and events run per server.</li>
+</ul>
+
+<h2 id="security">14. How it keeps players safe</h2>
+<ul>
+  <li><strong>Passwords</strong> are hashed with argon2id and travel only over TLS to the login
+    service, never over the game connection. Recovery codes are stored the same way.</li>
+  <li><strong>The certificate:</strong> clients remember your server's certificate on first connect
+    and warn if it ever changes. So keep <code>tls_dir</code> safe, and tell players if you
+    reinstall.</li>
+  <li><strong>The server decides everything:</strong> movement, combat, loot, trades, prices and
+    hacks. A modified client can't give itself items or money.
+    <ul>
+      <li>Trades, auctions and house sales are single database transactions: items can't be
+        duplicated or lost.</li>
+    </ul></li>
+  <li><strong>One known weakness:</strong> hacking mini-games can be auto-solved by a modified
+    client. The payouts are small and capped by cooldowns. A cheat-proof design is in
+    <a href="https://github.com/rsantacroce/millennium/blob/main/docs/hacking.md">docs/hacking.md</a>.</li>
+  <li><strong>Limits:</strong>
+    <ul>
+      <li>chat is rate-limited, filtered and capped at 255 characters;</li>
+      <li>logins are throttled per address and capped at 32 at once.</li>
+    </ul></li>
+  <li><strong>Keep private:</strong> the metrics address, the hub port and the database port.
+    Players only need port 5888.</li>
+</ul>
+
+<h2 id="trouble">15. Troubleshooting</h2>
+<div class="table-wrap"><table>
+<thead><tr><th>Symptom</th><th>Likely cause</th><th>Fix</th></tr></thead>
+<tbody>
+<tr><td>"Logged in, but the game server didn't answer"</td><td>TCP 5888 works, UDP 5888 doesn't</td><td>Open UDP 5888 on the firewall and router, mapped to the same port.</td></tr>
+<tr><td>"The server's identity has changed"</td><td>The certificate in <code>tls_dir</code> was lost or replaced</td><td>Restore it from a backup, or tell players to remove the line from <code>saves/known_servers.txt</code>.</td></tr>
+<tr><td>"could not listen on UDP/TCP port 5888"</td><td>Another server (or a hosted game) is running</td><td>Stop it, or change <code>bind</code> / <code>auth_bind</code>.</td></tr>
+<tr><td>"failed to start database"</td><td>Wrong <code>url</code>, or Postgres isn't up yet</td><td>Check the URL; systemd retries every 5 s.</td></tr>
+<tr><td>A warning about the development key</td><td><code>private_key</code> isn't set</td><td>Set one (<code>--generate-key</code>).</td></tr>
+<tr><td>Players get "Your game is out of date"</td><td>The server was upgraded</td><td>They need the matching game version.</td></tr>
+<tr><td>Lag, rubber-banding</td><td>The server or its network is overloaded</td><td>Check frame time and bandwidth on the status page; see <a href="#capacity">Capacity</a>.</td></tr>
+<tr><td>A player can't log in: "Too many failed attempts"</td><td>10 wrong passwords within 10 minutes from that address</td><td>It clears by itself in a few minutes.</td></tr>
+</tbody></table></div>
+<p class="muted">Something missing? <a href="https://github.com/rsantacroce/millennium/issues">Open an issue</a>.</p>
+
+      </div>
+    </div>
+  </div>
+  <footer><a href="index.html">Home</a> · <a href="manual.html">Player manual</a> · <a href="assets.html">Assets</a> · <a href="https://github.com/rsantacroce/millennium">Source</a></footer>
+</main>
+<nav class="taskbar" aria-label="Site">
+  <a class="start" href="index.html">⊞ Millennium</a>
+  <a href="manual.html">Manual</a>
+  <a href="admin.html" aria-current="page">Admin</a>
+  <a href="assets.html">Assets</a>
+  <a href="https://github.com/rsantacroce/millennium">Source</a>
+  <span class="clock" id="clock">12:00 AM</span>
+</nav>
+<script src="site.js"></script>
+</body>
+</html>

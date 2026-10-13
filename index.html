@@ -29,6 +29,7 @@
         <div class="buttons">
           <a class="button primary" href="manual.html">Read the manual</a>
           <a class="button" href="assets.html">Browse the assets</a>
+          <a class="button" href="admin.html">Run a server</a>
           <a class="button" href="https://github.com/rsantacroce/millennium">Source code</a>
         </div>
         <ul class="stats" aria-label="The game in numbers">
@@ -127,7 +128,9 @@ cargo run --release -p client</pre>
 <pre>docker compose up -d                 # Postgres (or use a SQLite file, see the manual)
 cargo run --release -p server
 cargo run --release -p client        # as many as you like</pre>
-        <p>Full instructions, every control and how the systems work: <a href="manual.html">the manual</a>.</p>
+        <p>Every control and how the systems work: <a href="manual.html">the player manual</a>. Running
+          a world for others (settings, moderation, events, backups, monitoring):
+          <a href="admin.html">the admin guide</a>.</p>
       </div>
     </div>
   </section>
@@ -153,7 +156,7 @@ cargo run --release -p client        # as many as you like</pre>
   <footer>
     Millennium is an original game. All characters, places and brands in it are made up.
     <br><a href="https://github.com/rsantacroce/millennium">Source</a> ·
-    <a href="manual.html">Manual</a> · <a href="assets.html">Assets</a> ·
+    <a href="manual.html">Manual</a> · <a href="admin.html">Admin guide</a> · <a href="assets.html">Assets</a> ·
     <a href="https://github.com/rsantacroce/millennium-site">This site's source</a>
   </footer>
 </main>
@@ -161,6 +164,7 @@ cargo run --release -p client        # as many as you like</pre>
 <nav class="taskbar" aria-label="Site">
   <a class="start" href="index.html" aria-current="page">⊞ Millennium</a>
   <a href="manual.html">Manual</a>
+  <a href="admin.html">Admin</a>
   <a href="assets.html">Assets</a>
   <a href="https://github.com/rsantacroce/millennium">Source</a>
   <span class="clock" id="clock">12:00 AM</span>
